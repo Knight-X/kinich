@@ -34,7 +34,7 @@ class fully_connected_layer : public Layer<ActivationFunc> {
         out[i] = Base::h_.result(a, index);
       }
 
-      return Base::_next_layer ? Base::_next_layer->forward_prop(out, index) : out;
+      return out;
     }
 
     const nn_vec_t& backward_prop(const nn_vec_t& curr_delta, size_t index) override
@@ -64,7 +64,7 @@ class fully_connected_layer : public Layer<ActivationFunc> {
           deltab[i] += curr_delta[i];
       }
 
-      return Base::_prev_layer->backward_prop(storage._layer_prev_delta, index);
+      return storage._layer_prev_delta;
     }
 
   protected:

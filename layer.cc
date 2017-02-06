@@ -47,16 +47,6 @@ nn_vec_t& baselayer::bias_diff(nn_size index)
   return layer_storage[index]._delta_b;
 }
 
-baselayer* baselayer::next()
-{
-  return _next_layer;
-}
-
-baselayer* baselayer::prev()
-{
-  return _prev_layer;
-}
-
 template<typename InitWeightType>
 baselayer& baselayer::init_w(const InitWeightType& f)
 {
@@ -89,5 +79,15 @@ void baselayer::setlayerparam(nn_size input_size, nn_size output_size, nn_size w
 void baselayer::setjobscount(nn_size count)
 {
   layer_storage.resize(count);
+}
+
+baselayer* baselayer::next()
+{
+  return _next_layer;
+}
+
+baselayer* baselayer::prev()
+{
+  return _prev_layer;
 }
 }

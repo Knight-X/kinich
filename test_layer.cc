@@ -40,6 +40,7 @@ TEST_F(LayerTest, DefaultTest) {
   EXPECT_EQ(0, l1.input_dim());
   EXPECT_EQ(10, l2.input_dim());
   EXPECT_EQ(in, l1.forward_prop(in, 0));
+  EXPECT_EQ(in, l1.backward_prop(in, 0));
   EXPECT_EQ(ans, l2.forward_prop(in, 0));
 }
       

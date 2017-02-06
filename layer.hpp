@@ -20,7 +20,7 @@ namespace nn {
     class baselayer {
       public:
         baselayer(nn_size input_dim, nn_size output_dim, nn_size weight_dim, nn_size bias_dim)
-            : _next_layer(nullptr), _prev_layer(nullptr), _weight_init(std::make_shared<nn::sqrtinit>()), 
+            : _prev_layer(nullptr), _next_layer(nullptr), _weight_init(std::make_shared<nn::sqrtinit>()), 
             _bias_init(std::make_shared<nn::constinit>(float_t(0)))
         {
             setjobscount(1);
@@ -32,12 +32,12 @@ namespace nn {
         void init_weight();
         const nn_vec_t& result(nn_size worker_i);
         const nn_vec_t& delta(nn_size worker_i);
+        baselayer* prev();
+        baselayer* next();
         nn_vec_t& weight();
         nn_vec_t& bias();
         nn_vec_t& weight_diff(nn_size index);
         nn_vec_t& bias_diff(nn_size index);
-        baselayer* next();
-        baselayer* prev();
         const nn_vec_t& curr_layer_output(nn_size worker_i);
         const nn_vec_t& prev_layer_delta(nn_size worker_i);
 
@@ -61,10 +61,10 @@ namespace nn {
       protected:
         nn_size in_dim;
         nn_size out_dim;
+        baselayer *_prev_layer;
+        baselayer *_next_layer;
         nn_vec_t weight_vec;
         nn_vec_t bias_vec;
-        baselayer* _next_layer;
-        baselayer* _prev_layer;
         std::shared_ptr<nn::initfunc_interface> _weight_init;
         std::shared_ptr<nn::initfunc_interface> _bias_init;
       private:

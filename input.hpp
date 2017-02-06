@@ -14,7 +14,7 @@ class input_layer : public Layer<activation::entity>
         nn::layer_local_storage& storage = base::get_local_storage(index);
         storage._layer_curr_output = in;
         nn_size n = base::out_dim;
-        return _next_layer ? _next_layer->forward_prop(in, index) : storage._layer_curr_output;
+        return storage._layer_curr_output;
     }
 
     const nn_vec_t& backward_prop(const nn_vec_t& current_delta, nn_size index) override
