@@ -1,4 +1,4 @@
-#include "nngraph.hpp"
+#include "graph.hpp"
 
 
 namespace nn {
