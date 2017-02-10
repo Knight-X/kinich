@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <memory>
 #include "activations.hpp"
 #include "layer_param.hpp"
 #include "nn_datatype.hpp"

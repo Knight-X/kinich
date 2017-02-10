@@ -1,7 +1,7 @@
 
 USER_DIR = .
 
-CPPFLAGS += -isystem $(GTEST_DIR)include
+CPPFLAGS += -isystem $(GTEST_DIR)/include
 
 CXXFLAGS += -g -Wall -Wextra -pthread -std=c++11
 
