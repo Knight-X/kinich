@@ -19,6 +19,9 @@ class NNetwork
     void init_weight();
 
     void add(nn::baselayer* layer);
+    nn::Graph* getGraph() { return nngraph; }
+    NNetwork(nn::Graph* g) : nngraph(g) { }
+    
 
     nn_vec_t predict(const nn_vec_t& in);
 
@@ -26,12 +29,11 @@ class NNetwork
         const std::vector<nn_vec_t>& t,
         size_t                batch_size,
         int                     epoch);
-    void runTrainEpoch(const std::vector<nn_vec_t>& in);
 
-    void runTrainBatch(const nn_vec_t& in);
+    void runTrainBatch(const nn_vec_t* in);
 
-    nn_vec_t fprop(const nn_vec_t& in);
-    nn_vec_t bprop(const nn_vec_t& in);
+    const nn_vec_t* fprop(const nn_vec_t& in);
+    const nn_vec_t* bprop(const nn_vec_t* in);
     void update_weight();
 };
 }

@@ -43,9 +43,10 @@ namespace nn {
         const nn_vec_t& prev_layer_delta(nn_size worker_i);
 
         const nn_vec_t& output(nn_size index) const { return layer_storage[index]._activations; };
-        virtual const nn_vec_t& forward_prop(const nn_vec_t &in, nn_size index) = 0;
+        virtual const nn_vec_t* forward_prop(const nn_vec_t *in, nn_size index) = 0;
 
-        virtual const nn_vec_t& backward_prop(const nn_vec_t& current, nn_size index) = 0;
+        virtual const nn_vec_t* backward_prop(const nn_vec_t* current, nn_size index) = 0;
+	virtual void update_weight() = 0;
         virtual activation::activation_interface& activation_func() = 0;
         nn_size input_dim();
         nn_size output_dim(); 

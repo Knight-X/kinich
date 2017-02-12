@@ -6,11 +6,15 @@ namespace nn {
 void NNetwork::add(nn::baselayer* layer)
 {
   nn::Node *n = new nn::Node(layer);  
-  nn::Node *c = nngraph->lastvertex();
+  nn::Node *c = nngraph->lastNode();
   nngraph->addvertex(n);
-  nn::Edge *e = new nn::Edge(c, n);
+  nn::Edge *e = new nn::Edge(n, c);
   nngraph->addedge(e);
 }
+
+void NNetwork::init_weight()
+{
+	}
 
 bool NNetwork::train(const std::vector<nn_vec_t>& in,
     const std::vector<nn_vec_t>& target,
@@ -18,65 +22,60 @@ bool NNetwork::train(const std::vector<nn_vec_t>& in,
     int                     epoch)
 {
    init_weight(); 
-   std::vector<nn_vec_t> input = getEpochData(batch_size); 
    for (int iter = 0; iter < epoch; iter++) {
-    runTrainBatch(input);
+     for (int index = 0; index < in.size(); index = index + batch_size) {
+       runTrainBatch(&in[index]);
+     }
    } 
 }
 
-void NNetwork::runTrainEpoch(const std::vector<nn_vec_t>& in)
-{
 
-  for (int tp = 0; tp < (int)in.size(); tp++)
-  {
-    runTrainBatch(in[tp]);
-  }
-}
-
-void NNetwork::runTrainBatch(const nn_vec_t &in)
+void NNetwork::runTrainBatch(const nn_vec_t *in)
 {
-  bprop(fprop(in));
+  bprop(fprop(*in));
   update_weight();
 }
 
-nn_vec_t NNetwork::fprop(const nn_vec_t &in)
+const nn_vec_t* NNetwork::fprop(const nn_vec_t &in)
 {
   nn::Node* s = nngraph->firstNode();
   nn::Edge* e = nngraph->firstEdge();
-  nn::Node* inNode = e->Input();
-  nn::Node* outNode = e->Output();
-  nn_vec_t& input = in;
+  nn::Node* inNode = e->input();
+  nn::Node* outNode = e->output();
+
+  const nn_vec_t* input = &in;
   while(e) {
-    input = inNode->forward_prop(input);
-    e = nngraph->getNextEdge(e);
-    inNode = e->Input();
-    outNode = e->Output();
+    input = inNode->getLayer()->forward_prop(input, 0);
+    e = nngraph->nextEdge(e);
+    inNode = e->input();
+    outNode = e->output();
   } 
-    return out;
+    return input;
 }
 
-nn_vec_t NNetwork::bprop(const nn_vec_t &in)
+const nn_vec_t* NNetwork::bprop(const nn_vec_t *in)
 {
-  nn::Node* s = nngrap->lastNode();
-  nn::Node* e = nngraph->lastEdge();
-  nn::Node* inNode = e->Input();
-  nn::Node* outNode = e->Output();
-  nn_vec_t& input = in;
+  nn::Node* s = nngraph->lastNode();
+  nn::Edge* e = nngraph->lastEdge();
+  nn::Node* inNode = e->input();
+  nn::Node* outNode = e->output();
+  const nn_vec_t* input = in;
   while(e) {
-    input = inNode->backward_prop(input);
-    e = nngraph->getNextEdge(e);
-    inNode = e->Input();
-    outNode = e->Output();
+    input = inNode->getLayer()->backward_prop(input, 0);
+    e = nngraph->nextEdge(e);
+    inNode = e->input();
+    outNode = e->output();
   }
-    return out;
+    return input;
 }
 
 void NNetwork::update_weight()
 {
-  nn::Node* s = nngraph->firstNode();
-  while (s) {
-    s->update_weight();
-    s = nngraph->nextNode(s);
+  nn::Edge* e = nngraph->firstEdge();
+  while (e) {
+    e->input()->getLayer()->update_weight();
+    e->output()->getLayer()->update_weight();
+    e = nngraph->nextEdge(e);
   }
 }
 }

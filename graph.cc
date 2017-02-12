@@ -11,6 +11,17 @@ namespace nn {
     {
       _edge.push_back(e);
     }
+
+    Edge* Graph::nextEdge(const nn::Edge* e)
+    {
+      Edge* res;
+      for (int i = 0; i < _edge.size(); i++) {
+	if (e->output() == _edge[i]->output())
+	 res = _edge[i];	
+	
+     } 
+	return res;
+    }
 }
 
 
