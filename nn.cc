@@ -2,7 +2,6 @@
 #include "graph.hpp"
 
 namespace nn {
-
 void NNetwork::add(nn::baselayer* layer)
 {
   nn::Node *n = new nn::Node(layer);  

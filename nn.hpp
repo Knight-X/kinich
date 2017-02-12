@@ -4,6 +4,9 @@
 #include "graph.hpp"
 #include "layer.hpp"
 #include "nn_datatype.hpp"
+#include "lossfunc.hpp"
+#include "gradient.hpp"
+#include "optimizer.hpp"
 
 namespace nn {
 
@@ -20,7 +23,7 @@ class NNetwork
 
     void add(nn::baselayer* layer);
     nn::Graph* getGraph() { return nngraph; }
-    NNetwork(nn::Graph* g) : nngraph(g) { }
+    NNetwork(nn::Graph* g) : nngraph(g) {}
     
 
     nn_vec_t predict(const nn_vec_t& in);

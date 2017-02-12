@@ -3,6 +3,9 @@
 #include "input.hpp"
 #include "fully_connect.hpp"
 #include "nn.hpp"
+#include "optimizer.hpp"
+#include "lossfunc.hpp"
+#include "graph.hpp"
 
 
 using ::testing::TestWithParam;
@@ -31,7 +34,7 @@ class NNnetTest : public QuickTest {
     }
 
     nn::Graph *g = new nn::Graph(); 
-    nn::NNetwork nnet = nn::NNetwork(g);
+    nn::NNetwork nnet {g};
 };
 
 TEST_F(NNnetTest, DefaultTest) {
