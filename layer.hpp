@@ -26,12 +26,13 @@ namespace nn {
         {
             setjobscount(1);
             setlayerparam(input_dim, output_dim, weight_dim, bias_dim);
+            init_weight();
 
         }
         virtual ~baselayer() = default;
         
         void init_weight();
-        const nn_vec_t& result(nn_size worker_i);
+        const nn_vec_t* result();
         const nn_vec_t& delta(nn_size worker_i);
         baselayer* prev();
         baselayer* next();
@@ -46,7 +47,7 @@ namespace nn {
         virtual const nn_vec_t* forward_prop(const nn_vec_t *in, nn_size index) = 0;
 
         virtual const nn_vec_t* backward_prop(const nn_vec_t* current, nn_size index) = 0;
-	virtual void update_weight() = 0;
+	//virtual void update_weight() = 0;
         virtual activation::activation_interface& activation_func() = 0;
         nn_size input_dim();
         nn_size output_dim(); 

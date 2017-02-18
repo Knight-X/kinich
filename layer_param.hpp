@@ -17,9 +17,10 @@ namespace nn {
         void fill(nn_vec_t *param, nn_size input, nn_size output) override {
           const float_t param_base = std::sqrt(scalefactor / (input + output));
           for(nn_vec_iter Iter = param->begin(); Iter != param->end(); ++Iter) {
-            static std::mt19937 gen(1);
-            std::uniform_int_distribution<int> dst(-param_base, param_base);
-            *Iter = dst(gen);
+            static std::mt19937 gen(time(0));
+            std::uniform_real_distribution<double> dis(-param_base, param_base);
+            *Iter = dis(gen);
+			std::cout << dis(gen) << " ";
           }
 
         }

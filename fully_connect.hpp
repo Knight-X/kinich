@@ -14,8 +14,9 @@ class fully_connected_layer : public Layer<ActivationFunc> {
       {}
 
 
-    const nn_vec_t& forward_prop(const nn_vec_t& in, nn_size index) override
+    const nn_vec_t* forward_prop(const nn_vec_t* inn, nn_size index) override
     {
+      const nn_vec_t& in = *inn;
       nn::layer_local_storage& storage = Base::get_local_storage(index);
 
       nn_vec_t &a = storage._activations;
@@ -25,20 +26,27 @@ class fully_connected_layer : public Layer<ActivationFunc> {
         a[i] = float_t(0.0);
         for (nn_size c = 0; c < Base::in_dim; c++) {
           a[i] += Base::weight_vec[c * Base::out_dim + i] * in[c];
+          //a[i] += 1.0 * in[c];
+//		  std::cout << a[i] << " "; 
         }
         if (has_bias)
-          a[i] += Base::bias_vec[i];
+        	a[i] += 0.0;
+          //a[i] += Base::bias_vec[i];
+
+//		std::cout << std::endl;
       }
 
       for (nn_size i = 0; i < Base::out_dim; i++) {
-        out[i] = Base::h_.result(a, index);
+        //out[i] = Base::h_.result(a, index);
+		out[i] = a[i];
       }
 
-      return out;
+      return &out;
     }
 
-    const nn_vec_t& backward_prop(const nn_vec_t& curr_delta, size_t index) override
+    const nn_vec_t* backward_prop(const nn_vec_t* curr, nn_size index) override
     {
+      const nn_vec_t& curr_delta = *curr;
       nn::layer_local_storage& storage = Base::get_local_storage(index);
       const nn_vec_t& prev_out = Base::_prev_layer->output(static_cast<int>(index));
       const nn::activation::activation_interface& prev_h = Base::_prev_layer->activation_func();
@@ -64,7 +72,7 @@ class fully_connected_layer : public Layer<ActivationFunc> {
           deltab[i] += curr_delta[i];
       }
 
-      return storage._layer_prev_delta;
+      return &storage._layer_prev_delta;
     }
 
   protected:

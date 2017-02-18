@@ -90,4 +90,8 @@ baselayer* baselayer::prev()
 {
   return _prev_layer;
 }
+const nn_vec_t* baselayer::result(){
+  return &layer_storage[0]._layer_curr_output;
 }
+}
+
