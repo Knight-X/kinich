@@ -20,7 +20,6 @@ namespace nn {
             static std::mt19937 gen(time(0));
             std::uniform_real_distribution<double> dis(-param_base, param_base);
             *Iter = dis(gen);
-			std::cout << dis(gen) << " ";
           }
 
         }

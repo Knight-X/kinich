@@ -15,6 +15,12 @@ nn_size baselayer::input_dim()
   return in_dim;
 }
 
+nn_size baselayer::output_dim()
+{
+	
+	return out_dim;
+}
+
 
 
 const nn_vec_t& baselayer::curr_layer_output(nn_size worker_i)

@@ -26,19 +26,15 @@ class fully_connected_layer : public Layer<ActivationFunc> {
         a[i] = float_t(0.0);
         for (nn_size c = 0; c < Base::in_dim; c++) {
           a[i] += Base::weight_vec[c * Base::out_dim + i] * in[c];
-          //a[i] += 1.0 * in[c];
-//		  std::cout << a[i] << " "; 
         }
         if (has_bias)
-        	a[i] += 0.0;
-          //a[i] += Base::bias_vec[i];
+          a[i] += Base::bias_vec[i];
 
-//		std::cout << std::endl;
       }
 
       for (nn_size i = 0; i < Base::out_dim; i++) {
-        //out[i] = Base::h_.result(a, index);
-		out[i] = a[i];
+        out[i] = Base::h_.result(a, index);
+		//out[i] = a[i];
       }
 
       return &out;
