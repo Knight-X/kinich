@@ -14,7 +14,8 @@ class NNetwork
 {
   private:
     nn::Graph* nngraph;
-    //OptimizerMethod optimizer_;
+    Optimizer* _optimizer;
+    mean_square_root*  _lossfunc;
 
   public:
     //OptimizerMethod optimizer();
@@ -23,7 +24,8 @@ class NNetwork
 
     void add(nn::baselayer* layer);
     nn::Graph* getGraph() { return nngraph; }
-    NNetwork(nn::Graph* g) : nngraph(g) {}
+    NNetwork(nn::Graph* g, nn::Optimizer* o, mean_square_root* f) : nngraph(g), _optimizer(o), _lossfunc(f) {}
+
     
 
     nn_vec_t predict(const nn_vec_t& in);
@@ -33,10 +35,10 @@ class NNetwork
         size_t                batch_size,
         int                     epoch);
 
-    void runTrainBatch(const nn_vec_t* in);
+    void runTrainBatch(const nn_vec_t* in, const nn_vec_t* t);
 
     const nn_vec_t* fprop(const nn_vec_t& in);
-    const nn_vec_t* bprop(const nn_vec_t* in);
+    const nn_vec_t* bprop(const nn_vec_t* in, const nn_vec_t* t);
     void update_weight();
 };
 }

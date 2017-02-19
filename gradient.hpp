@@ -7,8 +7,10 @@ namespace nn {
   {
     nn_vec_t grad(y->size());
     
-    for (nn_size s = 0; s < y->size(); s++) {
-	grad[s] = func->derivative_func(y[s], t[s]);
+	const nn_vec_t& _y = *y;
+	const nn_vec_t& _t = *t;
+    for (nn_size s = 0; s < _y.size(); s++) {
+	grad[s] = func->derivative_func(_y[s], _t[s]);
     }
     return grad;
   }
