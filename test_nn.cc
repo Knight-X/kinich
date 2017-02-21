@@ -34,7 +34,9 @@ class NNnetTest : public QuickTest {
     }
 
     nn::Graph *g = new nn::Graph(); 
-    nn::NNetwork nnet {g};
+    nn::mean_square_root* r = new nn::mean_square_root();
+    nn::Optimizer* o = new nn::stochastic_gradient_descent();
+    nn::NNetwork nnet {g, o, r};
 };
 
 TEST_F(NNnetTest, DefaultTest) {

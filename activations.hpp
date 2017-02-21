@@ -8,6 +8,11 @@ namespace activation {
       virtual float_t result(const nn_vec_t& in, nn_size index) const = 0;
 
       virtual float_t differential_result(float_t result) const = 0;
+      virtual nn_vec_t differential_result(const nn_vec_t& y, nn_size i) const {
+        nn_vec_t tmp(y.size(), 0);
+        tmp[i] = differential_result(y[i]);
+        return tmp;
+      }
   };
 
   class sigmoid : public activation_interface {

@@ -4,6 +4,7 @@
 #include "activations.hpp"
 #include "layer_param.hpp"
 #include "nn_datatype.hpp"
+#include "optimizer.hpp"
 
 
 namespace nn {
@@ -47,8 +48,8 @@ namespace nn {
         virtual const nn_vec_t* forward_prop(const nn_vec_t *in, nn_size index) = 0;
 
         virtual const nn_vec_t* backward_prop(const nn_vec_t* current, nn_size index) = 0;
-	//virtual void update_weight() = 0;
         virtual activation::activation_interface& activation_func() = 0;
+        void update(stochastic_gradient_descent* optimizer, nn_size batch);
         nn_size input_dim();
         nn_size output_dim(); 
         void setlayerparam(nn_size input_size, nn_size output_size, nn_size w_dim, nn_size b_dim);
