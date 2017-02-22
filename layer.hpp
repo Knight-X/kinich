@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <memory>
+#include <algorithm>
 #include "activations.hpp"
 #include "layer_param.hpp"
 #include "nn_datatype.hpp"
@@ -49,7 +50,8 @@ namespace nn {
 
         virtual const nn_vec_t* backward_prop(const nn_vec_t* current, nn_size index) = 0;
         virtual activation::activation_interface& activation_func() = 0;
-        void update(stochastic_gradient_descent* optimizer, nn_size batch);
+        void update(Optimizer* optimizer, nn_size batch);
+        void merge_delta(nn_size thread_size, nn_size batch_size); 
         nn_size input_dim();
         nn_size output_dim(); 
         void setlayerparam(nn_size input_size, nn_size output_size, nn_size w_dim, nn_size b_dim);

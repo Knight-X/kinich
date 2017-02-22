@@ -27,10 +27,10 @@ const nn_vec_t& baselayer::prev_layer_delta(nn_size worker_i)
   return layer_storage[worker_i]._layer_prev_delta;
 }
 
-void baselayer::update(stochastic_gradient_descent* optimizer, nn_size batch)
+void baselayer::update(Optimizer* optimizer, nn_size batch)
 {
-  optimizer->update(layer_storage._delta_w, weight_vec);
-  optimizer->update(layer_storage._delta_b, bias_vec);
+  optimizer->update(layer_storage[0]._delta_w, weight_vec);
+  optimizer->update(layer_storage[0]._delta_b, bias_vec);
 }
 
 void baselayer::merge_delta(nn_size thread_size, nn_size batch_size)
@@ -38,9 +38,12 @@ void baselayer::merge_delta(nn_size thread_size, nn_size batch_size)
   auto& ls = layer_storage;
   float_t totaldw = 0.0;
   float_t totaldb = 0.0;
+  nn_size len = ls[0]._delta_w.size();
   for (nn_size i = 0; i < thread_size; i++) {
-    ls[0]._delta_w += ls[i]._delta_w;
-    ls[0]._delta_b += ls[i]._delta_b;
+    for (nn_size j = 0; j < len; j++) {
+        ls[0]._delta_w[j] += ls[i]._delta_w[j];
+        ls[0]._delta_b[j] += ls[i]._delta_b[j];
+    }
   }
 
 

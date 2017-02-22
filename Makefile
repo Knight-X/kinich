@@ -33,7 +33,7 @@ gtest.a : gtest-all.o
 gtest_main.a : gtest-all.o gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 
-nn.o : $(USER_DIR)/nn.cc $(USER_DIR)/nn.hpp $(USER_DIR)/layer.hpp $(USER_DIR)/graph.hpp $(USER_DIR)/optimizer.hpp $(USER_DIR)/lossfunc.hpp $(USER_DIR)/gradient.hpp
+nn.o : $(USER_DIR)/nn.cc $(USER_DIR)/nn.hpp $(USER_DIR)/layer.hpp $(USER_DIR)/graph.hpp $(USER_DIR)/optimizer.hpp $(USER_DIR)/lossfunc.hpp 
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/nn.cc
 
 graph.o : $(USER_DIR)/graph.cc $(USER_DIR)/layer.hpp $(USER_DIR)/graph.hpp

@@ -1,4 +1,5 @@
 #include "nn.hpp"
+#include "gradient.hpp"
 #include "graph.hpp"
 
 namespace nn {
@@ -23,16 +24,16 @@ bool NNetwork::train(const std::vector<nn_vec_t>& in,
    init_weight(); 
    for (int iter = 0; iter < epoch; iter++) {
      for (int index = 0; index < in.size(); index = index + batch_size) {
-       runTrainBatch(&in[index], &target[index]);
+       runTrainBatch(&in[index], &target[index], batch_size);
      }
    } 
 }
 
 
-void NNetwork::runTrainBatch(const nn_vec_t *in, const nn_vec_t *t)
+void NNetwork::runTrainBatch(const nn_vec_t *in, const nn_vec_t *t, nn_size batch_size)
 {
   bprop(fprop(*in), t);
-  update_weight();
+  update_weight(batch_size);
 }
 
 const nn_vec_t* NNetwork::fprop(const nn_vec_t &in)
@@ -55,10 +56,10 @@ const nn_vec_t* NNetwork::fprop(const nn_vec_t &in)
 const nn_vec_t* NNetwork::bprop(const nn_vec_t *in, const nn_vec_t *t)
 {
   nn_vec_t delta(in->size());
-  nn_vec_t derivitive_e = gradient(_lossfunc, in, t);
+  nn_vec_t derivitive_e = nn::gradient(_lossfunc, in, t);
   nn::activation::activation_interface& _h = nngraph->lastNode()->getLayer()->activation_func();
   for (nn_size i = 0; i < in->size(); i++) {
-    nn_vec_t derivative_y = _h.differential_result(in, i);
+    nn_vec_t derivative_y = _h.differential_result(*in, i);
     for (int j = 0; j < derivitive_e.size(); j++) {
       delta[j] = derivitive_e[j]  * derivative_y[j];
     }
@@ -77,12 +78,12 @@ const nn_vec_t* NNetwork::bprop(const nn_vec_t *in, const nn_vec_t *t)
     return input;
 }
 
-void NNetwork::update_weight()
+void NNetwork::update_weight(nn_size batch_size)
 {
   nn::Edge* e = nngraph->firstEdge();
   while (e) {
-    e->input()->getLayer()->update_weight();
-    e->output()->getLayer()->update_weight();
+    e->input()->getLayer()->update(_optimizer, batch_size);
+    e->output()->getLayer()->update(_optimizer, batch_size);
     e = nngraph->nextEdge(e);
   }
 }

@@ -5,7 +5,6 @@
 #include "layer.hpp"
 #include "nn_datatype.hpp"
 #include "lossfunc.hpp"
-#include "gradient.hpp"
 #include "optimizer.hpp"
 
 namespace nn {
@@ -35,10 +34,10 @@ class NNetwork
         size_t                batch_size,
         int                     epoch);
 
-    void runTrainBatch(const nn_vec_t* in, const nn_vec_t* t);
+    void runTrainBatch(const nn_vec_t* in, const nn_vec_t* t, nn_size batch_size);
 
     const nn_vec_t* fprop(const nn_vec_t& in);
     const nn_vec_t* bprop(const nn_vec_t* in, const nn_vec_t* t);
-    void update_weight();
+    void update_weight(nn_size batch_size);
 };
 }
