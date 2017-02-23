@@ -42,6 +42,7 @@ public:
     void addvertex(nn::Node *g);
 
     void addedge(nn::Edge *e);
+    bool isEmpty() { return _node.size() == 0; }
     Node* lastNode()
     {
         return _node.back();

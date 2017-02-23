@@ -16,9 +16,10 @@ void Graph::addedge(nn::Edge *e)
 Edge* Graph::nextEdge(const nn::Edge* e)
 {
     Edge* res;
+
     for (int i = 0; i < _edge.size(); i++) {
-        if (e->output() == _edge[i]->output())
-            res = _edge[i];
+        if (e->output() == _edge[i]->output() && i + 1 < _edge.size())
+            res = _edge[i+1];
 
     }
     return res;
