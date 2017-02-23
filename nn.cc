@@ -6,12 +6,18 @@ namespace nn
 {
 void NNetwork::add(nn::baselayer* layer)
 {
-    nn::Node *n = new nn::Node(layer);
-    nn::Node *c = nngraph->lastNode();
-    nngraph->addvertex(n);
-    nn::Edge *e = new nn::Edge(n, c);
-    nngraph->addedge(e);
+    if (nngraph->isEmpty()) {
+        nn::Node *n = new nn::Node(layer);
+        nngraph->addvertex(n);
+    } else {
+        nn::Node *c = nngraph->lastNode();
+        nn::Node *n = new nn::Node(layer);
+        nngraph->addvertex(n);
+        nn::Edge *e = new nn::Edge(n, c);
+        nngraph->addedge(e);
+    }
 }
+
 
 void NNetwork::init_weight()
 {
@@ -45,12 +51,12 @@ const nn_vec_t* NNetwork::fprop(const nn_vec_t &in)
     nn::Node* outNode = e->output();
 
     const nn_vec_t* input = &in;
-    while(e) {
-        input = inNode->getLayer()->forward_prop(input, 0);
-        e = nngraph->nextEdge(e);
-        inNode = e->input();
-        outNode = e->output();
-    }
+    //while(e) {
+    input = inNode->getLayer()->forward_prop(input, 0);
+    e = nngraph->nextEdge(e);
+    inNode = e->input();
+    outNode = e->output();
+    //}
     return input;
 }
 

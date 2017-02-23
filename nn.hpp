@@ -6,6 +6,7 @@
 #include "nn_datatype.hpp"
 #include "lossfunc.hpp"
 #include "optimizer.hpp"
+#include "input.hpp"
 
 namespace nn
 {
@@ -27,7 +28,12 @@ public:
     {
         return nngraph;
     }
-    NNetwork(nn::Graph* g, nn::Optimizer* o, mean_square_root* f) : nngraph(g), _optimizer(o), _lossfunc(f) {}
+    NNetwork(nn::Graph* g, nn::Optimizer* o, mean_square_root* f) : nngraph(g), _optimizer(o), _lossfunc(f)
+    {
+        nn::input_layer l1 = nn::input_layer();
+
+
+    }
 
 
 

@@ -58,3 +58,8 @@ nntest : test_nn.o nn.o graph.o gtest_main.a layer.o
 
 testnn : test_nn.o layer.o nn.o gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+
+astyle : 
+	astyle --style=kr --indent=spaces=4 --indent-switches --suffix=none *.cc
+	astyle --style=kr --indent=spaces=4 --indent-switches --suffix=none *.hpp
+
