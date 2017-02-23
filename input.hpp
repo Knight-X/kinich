@@ -1,9 +1,10 @@
 #pragma once
 #include "layer.hpp"
-namespace nn {
-class input_layer : public Layer<activation::entity> 
+namespace nn
 {
-  public:
+class input_layer : public Layer<activation::entity>
+{
+public:
     typedef Layer<activation::entity> base;
 
     input_layer() : base(0, 0, 0, 0) {}

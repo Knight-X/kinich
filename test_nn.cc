@@ -11,33 +11,41 @@
 using ::testing::TestWithParam;
 using ::testing::Values;
 
-class QuickTest : public testing::Test {
-  protected:
+class QuickTest : public testing::Test
+{
+protected:
 
-    virtual void SetUp() {
-      start_time = time(NULL);
+    virtual void SetUp()
+    {
+        start_time = time(NULL);
     }
 
-    virtual void TearDown() {
-      const time_t end_time = time(NULL);
+    virtual void TearDown()
+    {
+        const time_t end_time = time(NULL);
 
-      EXPECT_TRUE(end_time - start_time <= 100) << "The go";
+        EXPECT_TRUE(end_time - start_time <= 100) << "The go";
     }
 
     time_t start_time;
 };
 
-class NNnetTest : public QuickTest {
-  protected:
-    virtual void SetUp() {
-      QuickTest::SetUp();
+class NNnetTest : public QuickTest
+{
+protected:
+    virtual void SetUp()
+    {
+        QuickTest::SetUp();
     }
 
-    nn::Graph *g = new nn::Graph(); 
-    nn::NNetwork nnet {g};
+    nn::Graph *g = new nn::Graph();
+    nn::mean_square_root* r = new nn::mean_square_root();
+    nn::Optimizer* o = new nn::stochastic_gradient_descent();
+    nn::NNetwork nnet {g, o, r};
 };
 
-TEST_F(NNnetTest, DefaultTest) {
-  EXPECT_EQ(g, nnet.getGraph());
+TEST_F(NNnetTest, DefaultTest)
+{
+    EXPECT_EQ(g, nnet.getGraph());
 }
-      
+

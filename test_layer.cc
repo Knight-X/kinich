@@ -9,32 +9,38 @@
 using ::testing::TestWithParam;
 using ::testing::Values;
 
-class QuickTest : public testing::Test {
-  protected:
+class QuickTest : public testing::Test
+{
+protected:
 
-    virtual void SetUp() {
-      start_time = time(NULL);
+    virtual void SetUp()
+    {
+        start_time = time(NULL);
     }
 
-    virtual void TearDown() {
-      const time_t end_time = time(NULL);
+    virtual void TearDown()
+    {
+        const time_t end_time = time(NULL);
 
-      EXPECT_TRUE(end_time - start_time <= 100) << "The go";
+        EXPECT_TRUE(end_time - start_time <= 100) << "The go";
     }
 
     time_t start_time;
 };
 
-class LayerTest : public QuickTest {
-  protected:
-    virtual void SetUp() {
-      QuickTest::SetUp();
+class LayerTest : public QuickTest
+{
+protected:
+    virtual void SetUp()
+    {
+        QuickTest::SetUp();
     }
 
     nn::input_layer l1 = nn::input_layer();
     nn::fully_connected_layer<nn::activation::sigmoid> l2 = nn::fully_connected_layer<nn::activation::sigmoid>(10, 10);
 };
 
+//<<<<<<< HEAD
 TEST_F(LayerTest, DefaultTest) {
   nn::nn_vec_t in; 
   nn::nn_vec_t gy;
@@ -75,4 +81,4 @@ TEST_F(LayerTest, DefaultTest) {
   } 
 
 }
-      
+
