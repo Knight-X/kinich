@@ -18,8 +18,8 @@ nn_size baselayer::input_dim()
 
 nn_size baselayer::output_dim()
 {
-	
-	return out_dim;
+
+    return out_dim;
 }
 
 

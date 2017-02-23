@@ -24,20 +24,20 @@ public:
         nn_vec_t &a = storage._activations;
         nn_vec_t &out = storage._layer_curr_output;
 
-      for (nn_size i = 0; i < Base::out_dim; i++) {
-        a[i] = float_t(0.0);
-        for (nn_size c = 0; c < Base::in_dim; c++) {
-          a[i] += Base::weight_vec[c * Base::out_dim + i] * in[c];
+        for (nn_size i = 0; i < Base::out_dim; i++) {
+            a[i] = float_t(0.0);
+            for (nn_size c = 0; c < Base::in_dim; c++) {
+                a[i] += Base::weight_vec[c * Base::out_dim + i] * in[c];
+            }
+            if (has_bias)
+                a[i] += Base::bias_vec[i];
+
         }
-        if (has_bias)
-          a[i] += Base::bias_vec[i];
 
-      }
-
-      for (nn_size i = 0; i < Base::out_dim; i++) {
-        out[i] = Base::h_.result(a, index);
-		//out[i] = a[i];
-      }
+        for (nn_size i = 0; i < Base::out_dim; i++) {
+            out[i] = Base::h_.result(a, index);
+            //out[i] = a[i];
+        }
 
         return &out;
     }
