@@ -13,14 +13,19 @@ void Graph::addedge(nn::Edge *e)
     _edge.push_back(e);
 }
 
-Edge* Graph::nextEdge(const nn::Edge* e)
+Edge* Graph::nextEdge(const nn::Node* n)
 {
     Edge* res;
+    nn::nn_size index;
 
-    for (int i = 0; i < _edge.size(); i++) {
-        if (e->output() == _edge[i]->output() && i + 1 < _edge.size())
-            res = _edge[i+1];
-
+    for (nn::nn_size i = 0; i < _edge.size(); i++) {
+        if (n == _edge[i]->input())
+            index = i;
+    }
+    if (index < _edge.size()) {
+        res = _edge[index];
+    } else {
+        res = NULL;
     }
     return res;
 }

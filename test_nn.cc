@@ -74,7 +74,7 @@ TEST_F(NNnetTest, DefaultTest)
     const nn::nn_vec_t* tmp2 = nnet.fprop(in);
     nn::nn_vec_t res = *tmp2;
 
-    for (nn::nn_size i = 0; i < res.size(); i++) 
+    for (nn::nn_size i = 0; i < res.size(); i++)
         EXPECT_EQ(res[i], out[i]);
 
 }

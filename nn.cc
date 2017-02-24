@@ -13,7 +13,7 @@ void NNetwork::add(nn::baselayer* layer)
         nn::Node *c = nngraph->lastNode();
         nn::Node *n = new nn::Node(layer);
         nngraph->addvertex(n);
-        nn::Edge *e = new nn::Edge(n, c);
+        nn::Edge *e = new nn::Edge(c, n);
         nngraph->addedge(e);
     }
 }
@@ -45,18 +45,17 @@ void NNetwork::runTrainBatch(const nn_vec_t *in, const nn_vec_t *t, nn_size batc
 
 const nn_vec_t* NNetwork::fprop(const nn_vec_t &in)
 {
-    nn::Node* s = nngraph->firstNode();
-    nn::Edge* e = nngraph->firstEdge();
-    nn::Node* inNode = e->input();
-    nn::Node* outNode = e->output();
-
+    nn::Node* outNode = nngraph->firstNode();
     const nn_vec_t* input = &in;
-    //while(e) {
-    input = inNode->getLayer()->forward_prop(input, 0);
-    e = nngraph->nextEdge(e);
-    inNode = e->input();
-    outNode = e->output();
-    //}
+    input = outNode->getLayer()->forward_prop(input, 0);
+
+    nn::Edge* e = nngraph->firstEdge();
+
+    while(e) {
+        outNode = e->output();
+        input = outNode->getLayer()->forward_prop(input, 0);
+        e = nngraph->nextEdge(outNode);
+    }
     return input;
 }
 
@@ -78,7 +77,7 @@ const nn_vec_t* NNetwork::bprop(const nn_vec_t *in, const nn_vec_t *t)
     const nn_vec_t* input = &delta;
     while(e) {
         input = inNode->getLayer()->backward_prop(input, 0);
-        e = nngraph->nextEdge(e);
+        e = nngraph->nextEdge(outNode);
         inNode = e->input();
         outNode = e->output();
     }
@@ -88,10 +87,11 @@ const nn_vec_t* NNetwork::bprop(const nn_vec_t *in, const nn_vec_t *t)
 void NNetwork::update_weight(nn_size batch_size)
 {
     nn::Edge* e = nngraph->firstEdge();
+    nn::Node* node = e->output();
     while (e) {
         e->input()->getLayer()->update(_optimizer, batch_size);
         e->output()->getLayer()->update(_optimizer, batch_size);
-        e = nngraph->nextEdge(e);
+        e = nngraph->nextEdge(node);
     }
 }
 }

@@ -62,7 +62,7 @@ public:
     {
         return _edge.back();
     }
-    Edge* nextEdge(const nn::Edge* e);
+    Edge* nextEdge(const nn::Node* n);
     Node* nextNode(const nn::Node* n);
 private:
     std::vector<Node *> _node;
