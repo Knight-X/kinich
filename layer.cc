@@ -10,12 +10,14 @@ void baselayer::init_weight()
     _bias_init->fill(&bias_vec, in_dim, out_dim);
 }
 
-void baselayer::setlayer(nn::baselayer* prev, nn::baselayer* next)
+void baselayer::setprevlayer(nn::baselayer* prev)
 {
     _prev_layer = prev;
+}
+void baselayer::setnextlayer(nn::baselayer* next)
+{
     _next_layer = next;
 }
-
 nn_size baselayer::input_dim()
 {
     return in_dim;

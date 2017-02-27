@@ -12,8 +12,8 @@ void NNetwork::add(nn::baselayer* layer)
     } else {
         nn::Node *c = nngraph->lastNode();
         nn::Node *n = new nn::Node(layer);
-        layer->setlayer(c->getLayer(), nullptr);
-        c->getLayer()->setlayer(nullptr, layer);
+        layer->setprevlayer(c->getLayer());
+        c->getLayer()->setnextlayer(layer);
         nngraph->addvertex(n);
         nn::Edge *e = new nn::Edge(c, n);
         nngraph->addedge(e);
@@ -41,8 +41,8 @@ bool NNetwork::train(const std::vector<std::vector<nn_vec_t>>& in,
 
 void NNetwork::runTrainBatch(const std::vector<nn_vec_t>& in, const std::vector<nn_vec_t>& t, nn_size batch_size)
 {
-   bprop(fprop(in), t);
-    
+    bprop(fprop(in), t);
+
     update_weight(batch_size);
 }
 
@@ -61,10 +61,12 @@ const std::vector<nn_vec_t>& NNetwork::fprop(const std::vector<nn_vec_t>& in)
 
         while(e) {
             outNode = e->output();
-            input = outNode->getLayer()->forward_prop(input, 0); e = nngraph->nextEdge(outNode); }
+            input = outNode->getLayer()->forward_prop(input, 0);
+            e = nngraph->nextEdge(outNode);
+        }
         forward_res.push_back(*input);
     }
-    return forward_res; 
+    return forward_res;
 }
 
 const std::vector<nn_vec_t>& NNetwork::bprop(const std::vector<nn_vec_t>& in, const std::vector<nn_vec_t>& t)
@@ -72,12 +74,11 @@ const std::vector<nn_vec_t>& NNetwork::bprop(const std::vector<nn_vec_t>& in, co
     if (backward_res.size() > 0)
         backward_res.erase(backward_res.begin(), backward_res.end());
 
-        nn::Edge* e = nngraph->lastEdge();
-        const nn::nn_vec_t* input = nullptr;
+    nn::Node* inNode = nngraph->lastNode();
+    const nn::nn_vec_t* input = nullptr;
     for (nn::nn_size i = 0; i < in.size(); i++) {
         nn_vec_t delta(in[i].size());
         nn_vec_t derivitive_e = nn::gradient(_lossfunc, &in[i], &t[i]);
-        nn::Node* inNode = nngraph->lastNode();
         nn::activation::activation_interface& _h = inNode->getLayer()->activation_func();
         for (nn_size index = 0; index < in[i].size(); index++) {
             nn_vec_t derivative_y = _h.differential_result(in[i], index);
@@ -86,8 +87,9 @@ const std::vector<nn_vec_t>& NNetwork::bprop(const std::vector<nn_vec_t>& in, co
             }
         }
         input = &delta;
+        nn::Edge* e = nngraph->lastEdge();
         while(e) {
-            inNode = e->output();
+            inNode = e->input();
             input = inNode->getLayer()->backward_prop(input, 0);
             e = nngraph->prevEdge(inNode);
         }

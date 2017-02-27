@@ -16,13 +16,16 @@ void Graph::addedge(nn::Edge *e)
 Edge* Graph::nextEdge(const nn::Node* n)
 {
     Edge* res;
-    nn::nn_size index;
+    nn::nn_size index = 0;
+    bool find = false;
 
     for (nn::nn_size i = 0; i < _edge.size(); i++) {
-        if (n == _edge[i]->input())
+        if (n == _edge[i]->input()) {
             index = i;
+            find = true;
+        }
     }
-    if (index < _edge.size()) {
+    if (find) {
         res = _edge[index];
     } else {
         res = NULL;
@@ -32,12 +35,15 @@ Edge* Graph::nextEdge(const nn::Node* n)
 Edge* Graph::prevEdge(const nn::Node* n)
 {
     Edge* res;
-    nn::nn_size index;
+    nn::nn_size index = 0;
+    bool find = false;
     for (nn::nn_size i = 0; i < _edge.size(); i++) {
-        if (n == _edge[i]->output())
+        if (n == _edge[i]->output()) {
             index = i;
+            find = true;
+        }
     }
-    if (index < 0) {
+    if (find) {
         res = _edge[index];
     } else {
         res = NULL;
