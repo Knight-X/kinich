@@ -28,6 +28,7 @@ public:
             a[i] = float_t(0.0);
             for (nn_size c = 0; c < Base::in_dim; c++) {
                 a[i] += Base::weight_vec[c * Base::out_dim + i] * in[c];
+                //       std::cout << in[c] << std::endl;
             }
             if (has_bias)
                 a[i] += Base::bias_vec[i];
