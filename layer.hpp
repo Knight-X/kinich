@@ -40,6 +40,7 @@ public:
     const nn_vec_t& delta(nn_size worker_i);
     baselayer* prev();
     baselayer* next();
+    void setlayer(baselayer* prev, baselayer* next);
     nn_vec_t& weight();
     nn_vec_t& bias();
     nn_vec_t& weight_diff(nn_size index);

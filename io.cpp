@@ -10,10 +10,11 @@
 using namespace std;
 int nInputs = 0;
 int nTargets = 0;
+int batch_size = 1;
 
 void p(string& line, nn::nn_vec_t* data, nn::nn_vec_t* target);
 
-bool loadFile(const char* filename, int nI, int nT, nn::nn_vec_t* data, nn::nn_vec_t* target)
+bool loadFile(const char* filename, int nI, int nT, std::vector<std::vector<nn::nn_vec_t>>* data, std::vector<std::vector<nn::nn_vec_t>>* target)
 {
   nInputs = nI;
   nTargets = nT;
@@ -23,20 +24,29 @@ bool loadFile(const char* filename, int nI, int nT, nn::nn_vec_t* data, nn::nn_v
 
   if (inputFile.is_open()) {
     string line = "";
-
     while (!inputFile.eof()) 
     {
-      getline(inputFile, line);
-      if (line.length() > 2) p(line, data, target);
+      nn::nn_vec_t dataset;
+      nn::nn_vec_t targetset;
+      std::vector<nn::nn_vec_t> batch;
+      std::vector<nn::nn_vec_t> tbatch;
+      for (int i = 0; i < batch_size; i++) {
+        getline(inputFile, line);
+        if (line.length() > 2) p(line, &dataset, &targetset);
+        batch.push_back(dataset);
+        tbatch.push_back(targetset);
+      }
+      data->push_back(batch);
+      target->push_back(tbatch);
     }
 
 
     //random_shuffle(data->begin(), data->end());
 
     cout << "Input file: " << filename << "\nRead Complete: " << data->size() << "Patterns Loaded" << endl;
-    nn::nn_vec_t& g = *data;
+    std::vector<std::vector<nn::nn_vec_t>> g = *data;
     for (int i = 0; i < 16; i++) {
-      cout << g[i] << " ";
+      cout << g[0][0][i] << " ";
     }
     cout << endl;
 
@@ -49,7 +59,7 @@ bool loadFile(const char* filename, int nI, int nT, nn::nn_vec_t* data, nn::nn_v
   }
 }
 
-void p(string &line, nn::nn_vec_t* data, nn::nn_vec_t* targets)
+void p(string& line, nn::nn_vec_t* data, nn::nn_vec_t* targets)
 {
   float_t pattern;
   float_t target;

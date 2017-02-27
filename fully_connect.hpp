@@ -57,6 +57,8 @@ public:
                 prev_delta[j] += curr_delta[c] * Base::weight_vec[c * Base::out_dim + j];
             }
             prev_delta[j] *= prev_h.differential_result(prev_out[j]);
+            //std::cout << "full" << std::endl;
+            //std::cout << prev_delta[j] << std::endl;
         }
         for (nn_size j = 0; j < Base::in_dim; j++) {
             for (nn_size c = 0; c < Base::out_dim; c++) {

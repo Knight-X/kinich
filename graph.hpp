@@ -64,6 +64,7 @@ public:
     }
     Edge* nextEdge(const nn::Node* n);
     Node* nextNode(const nn::Node* n);
+    Edge* prevEdge(const nn::Node* n);
 private:
     std::vector<Node *> _node;
     std::vector<Edge*> _edge;

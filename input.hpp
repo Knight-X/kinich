@@ -7,7 +7,7 @@ class input_layer : public Layer<activation::entity>
 public:
     typedef Layer<activation::entity> base;
 
-    input_layer() : base(0, 0, 0, 0) {}
+    input_layer() : base(0, 10, 0, 0) {}
 
 
     const nn_vec_t* forward_prop(const nn_vec_t* in, nn_size index) override

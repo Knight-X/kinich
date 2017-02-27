@@ -17,6 +17,8 @@ private:
     nn::Graph* nngraph;
     Optimizer* _optimizer;
     mean_square_root*  _lossfunc;
+    std::vector<nn_vec_t> forward_res;
+    std::vector<nn_vec_t> backward_res;
 
 public:
     //OptimizerMethod optimizer();
@@ -39,15 +41,15 @@ public:
 
     nn_vec_t predict(const nn_vec_t& in);
 
-    bool train(const std::vector<nn_vec_t>& in,
-               const std::vector<nn_vec_t>& t,
+    bool train(const std::vector<std::vector<nn_vec_t>>& in,
+               const std::vector<std::vector<nn_vec_t>>& t,
                size_t                batch_size,
                int                     epoch);
 
-    void runTrainBatch(const nn_vec_t* in, const nn_vec_t* t, nn_size batch_size);
+    void runTrainBatch(const std::vector<nn_vec_t>& in, const std::vector<nn_vec_t>& t, nn_size batch_size);
 
-    const nn_vec_t* fprop(const nn_vec_t& in);
-    const nn_vec_t* bprop(const nn_vec_t* in, const nn_vec_t* t);
+    const std::vector<nn_vec_t>& fprop(const std::vector<nn_vec_t>& in);
+    const std::vector<nn_vec_t>& bprop(const std::vector<nn_vec_t>& in, const std::vector<nn_vec_t>& t);
     void update_weight(nn_size batch_size);
 };
 }

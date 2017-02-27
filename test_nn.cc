@@ -71,7 +71,7 @@ TEST_F(NNnetTest, DefaultTest)
     }
     nnet.add(&l1);
     nnet.add(&l2);
-    const nn::nn_vec_t* tmp2 = nnet.fprop(in);
+    const nn::nn_vec_t* tmp2 = nnet.fprop(in, 0);
     nn::nn_vec_t res = *tmp2;
 
     for (nn::nn_size i = 0; i < res.size(); i++)

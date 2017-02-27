@@ -8,7 +8,12 @@ void baselayer::init_weight()
     _weight_init->fill(&weight_vec, in_dim, out_dim );
 
     _bias_init->fill(&bias_vec, in_dim, out_dim);
+}
 
+void baselayer::setlayer(nn::baselayer* prev, nn::baselayer* next)
+{
+    _prev_layer = prev;
+    _next_layer = next;
 }
 
 nn_size baselayer::input_dim()
