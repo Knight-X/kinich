@@ -74,23 +74,29 @@ const std::vector<nn_vec_t>& NNetwork::bprop(const std::vector<nn_vec_t>& in, co
     if (backward_res.size() > 0)
         backward_res.erase(backward_res.begin(), backward_res.end());
 
-    nn::Node* inNode = nngraph->lastNode();
+    nn::Node* outNode = nngraph->lastNode();
+    nn::Node* inNode = nullptr;
     const nn::nn_vec_t* input = nullptr;
     for (nn::nn_size i = 0; i < in.size(); i++) {
         nn_vec_t delta(in[i].size());
         nn_vec_t derivitive_e = nn::gradient(_lossfunc, &in[i], &t[i]);
-        nn::activation::activation_interface& _h = inNode->getLayer()->activation_func();
+        nn::activation::activation_interface& _h = outNode->getLayer()->activation_func();
         for (nn_size index = 0; index < in[i].size(); index++) {
             nn_vec_t derivative_y = _h.differential_result(in[i], index);
             for (nn_size j = 0; j < derivitive_e.size(); j++) {
-                delta[j] = derivitive_e[j]  * derivative_y[j];
+                delta[index] += derivitive_e[j]  * derivative_y[j];
             }
         }
         input = &delta;
+//        for (int s = 0; s < delta.size(); s++) {
+//            std::cout << "delta" << delta[s] << std::endl;
+//            std::cout << "in" << in[0][s] << std::endl;
+//        }
         nn::Edge* e = nngraph->lastEdge();
         while(e) {
+            outNode = e->output();
             inNode = e->input();
-            input = inNode->getLayer()->backward_prop(input, 0);
+            input = outNode->getLayer()->backward_prop(input, 0);
             e = nngraph->prevEdge(inNode);
         }
         backward_res.push_back(*input);
@@ -101,8 +107,9 @@ const std::vector<nn_vec_t>& NNetwork::bprop(const std::vector<nn_vec_t>& in, co
 void NNetwork::update_weight(nn_size batch_size)
 {
     nn::Edge* e = nngraph->firstEdge();
-    nn::Node* node = e->output();
+    nn::Node* node = nullptr;
     while (e) {
+        node = e->output();
         e->input()->getLayer()->update(_optimizer, batch_size);
         e->output()->getLayer()->update(_optimizer, batch_size);
         e = nngraph->nextEdge(node);
