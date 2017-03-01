@@ -1,5 +1,4 @@
 #include "nn.hpp"
-#include "gradient.hpp"
 #include "graph.hpp"
 
 namespace nn

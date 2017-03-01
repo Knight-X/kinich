@@ -7,6 +7,7 @@
 #include "lossfunc.hpp"
 #include "optimizer.hpp"
 #include "input.hpp"
+#include "gradient.hpp"
 
 namespace nn
 {
