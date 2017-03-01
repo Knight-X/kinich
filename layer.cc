@@ -44,6 +44,8 @@ const nn_vec_t& baselayer::prev_layer_delta(nn_size worker_i)
 void baselayer::update(Optimizer* optimizer, nn_size batch)
 {
     optimizer->update(layer_storage[0]._delta_w, weight_vec);
+    //  if (weight_vec.size() > 0)
+    //      std::cout << "1 " << weight_vec[9] << std::endl;
     optimizer->update(layer_storage[0]._delta_b, bias_vec);
 }
 

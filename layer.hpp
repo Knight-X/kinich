@@ -25,7 +25,7 @@ class baselayer
 {
 public:
     baselayer(nn_size input_dim, nn_size output_dim, nn_size weight_dim, nn_size bias_dim)
-        : _prev_layer(nullptr), _next_layer(nullptr), _weight_init(std::make_shared<nn::sqrtinit>()),
+        : _prev_layer(nullptr), _next_layer(nullptr), _weight_init(std::make_shared<nn::constinit>(0.02)),
           _bias_init(std::make_shared<nn::constinit>(float_t(0)))
     {
         setjobscount(1);
@@ -51,7 +51,7 @@ public:
 
     const nn_vec_t& output(nn_size index) const
     {
-        return layer_storage[index]._activations;
+        return layer_storage[index]._layer_curr_output;
     };
     virtual const nn_vec_t* forward_prop(const nn_vec_t *in, nn_size index) = 0;
 

@@ -13,7 +13,7 @@ public:
 class stochastic_gradient_descent : public Optimizer
 {
 public:
-    stochastic_gradient_descent() : echelon(float_t(0)) {}
+    stochastic_gradient_descent() : echelon(float_t(0.001)) {}
     void update(const nn_vec_t& derivative_w, nn_vec_t& w) override
     {
         for (int i = 0; i < w.size(); i++) {
