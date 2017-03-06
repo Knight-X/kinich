@@ -87,6 +87,7 @@ const std::vector<nn_vec_t>& NNetwork::bprop(const std::vector<nn_vec_t>& in, co
             }
         }
         input = &delta;
+        output_delta = delta;
 //        for (int s = 0; s < delta.size(); s++) {
 //            std::cout << "delta" << delta[s] << std::endl;
 //            std::cout << "in" << in[0][s] << std::endl;

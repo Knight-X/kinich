@@ -20,7 +20,7 @@ private:
     mean_square_root*  _lossfunc;
     std::vector<nn_vec_t> forward_res;
     std::vector<nn_vec_t> backward_res;
-
+    nn_vec_t output_delta;
 public:
     //OptimizerMethod optimizer();
 
@@ -52,5 +52,7 @@ public:
     const std::vector<nn_vec_t>& fprop(const std::vector<nn_vec_t>& in);
     const std::vector<nn_vec_t>& bprop(const std::vector<nn_vec_t>& in, const std::vector<nn_vec_t>& t);
     void update_weight(nn_size batch_size);
+    nn::nn_vec_t output() { return output_delta; }
+    
 };
 }
