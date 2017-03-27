@@ -21,10 +21,12 @@ private:
     std::vector<nn_vec_t> forward_res;
     std::vector<nn_vec_t> backward_res;
     nn_vec_t output_delta;
+    double mse = 0;
 public:
     //OptimizerMethod optimizer();
 
     void init_weight();
+    void collect_error(nn_vec_t r);
 
     void add(nn::baselayer* layer);
     nn::Graph* getGraph()
@@ -52,7 +54,10 @@ public:
     const std::vector<nn_vec_t>& fprop(const std::vector<nn_vec_t>& in);
     const std::vector<nn_vec_t>& bprop(const std::vector<nn_vec_t>& in, const std::vector<nn_vec_t>& t);
     void update_weight(nn_size batch_size);
-    nn::nn_vec_t output() { return output_delta; }
-    
+    nn::nn_vec_t output()
+    {
+        return output_delta;
+    }
+
 };
 }

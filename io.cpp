@@ -10,7 +10,7 @@
 using namespace std;
 int nInputs = 0;
 int nTargets = 0;
-int batch_size = 3;
+int batch_size = 1;
 
 void p(string& line, nn::nn_vec_t* data, nn::nn_vec_t* target);
 

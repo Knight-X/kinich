@@ -41,6 +41,7 @@ bool NNetwork::train(const std::vector<std::vector<nn_vec_t>>& in,
 void NNetwork::runTrainBatch(const std::vector<nn_vec_t>& in, const std::vector<nn_vec_t>& t, nn_size batch_size)
 {
     bprop(fprop(in), t);
+    mse = mse / batch_size;
 
     update_weight(batch_size);
 }
@@ -113,6 +114,12 @@ void NNetwork::update_weight(nn_size batch_size)
         e->input()->getLayer()->update(_optimizer, batch_size);
         e->output()->getLayer()->update(_optimizer, batch_size);
         e = nngraph->nextEdge(node);
+    }
+}
+void NNetwork::collect_error(nn_vec_t r)
+{
+    for (nn_size i = 0; i < r.size(); i++) {
+        mse += r[i];
     }
 }
 }
