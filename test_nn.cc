@@ -57,16 +57,16 @@ TEST_F(NNnetTest, DefaultTest)
     EXPECT_EQ(g, nnet.getGraph());
     nnet.add(&l1);
     nnet.add(&l2);
-    
+
     std::vector<nn::nn_vec_t> res_fprop = nnet.fprop(in[0]);
-    
-    
+
+
     std::cout << "fully_connected_layer test start" << std::endl;
     //perform forward propagation
     //const nn::nn_vec_t* tmp2 = l2.forward_prop(newin, 0);
     const nn::nn_vec_t& res = l2.output(0);
 
-    //do forward propagation for test case 
+    //do forward propagation for test case
     nn::nn_vec_t tmp_res = nn::nn_vec_t(16, 0.0);
     nn::nn_vec_t target_out = nn::nn_vec_t(16, 0.0);
     nn::nn_vec_t& weight = l2.weight();
@@ -108,7 +108,7 @@ TEST_F(NNnetTest, DefaultTest)
         cout << endl;
     }
     cout << endl;
-    
+
     //backward propagation
     nn::layer_local_storage& storage = l2.get_local_storage(0);
     const nn::nn_vec_t& prev_out = l2.prev()->output(0);
@@ -120,7 +120,7 @@ TEST_F(NNnetTest, DefaultTest)
 
     for (nn::nn_size j = 0; j < in_dim; j++) {
         for (nn::nn_size c = 0; c < out_dim; c++) {
-            delta_w[j * out_dim + c] += delta[c] * prev_out[j]; 
+            delta_w[j * out_dim + c] += delta[c] * prev_out[j];
         }
         prev_delta[j] *= prev_h.differential_result(prev_out[j]);
     }
@@ -130,7 +130,7 @@ TEST_F(NNnetTest, DefaultTest)
         }
     }
 
-    
+
     std::vector<nn::nn_vec_t> res_bprop = nnet.bprop(res_fprop, gy[0]);
     nn::nn_vec_t& dw = l2.weight_diff(0);
     nn::nn_vec_t& db = l2.bias_diff(0);
@@ -140,8 +140,8 @@ TEST_F(NNnetTest, DefaultTest)
         EXPECT_EQ(d[i], delta[i]);
     }
 
-   for (nn::nn_size i = 0; i < out_dim; i++) 
-            delta_b[i] += delta[i];
+    for (nn::nn_size i = 0; i < out_dim; i++)
+        delta_b[i] += delta[i];
 
     for (nn::nn_size i = 0; i < delta_w.size(); i++) {
         EXPECT_EQ(delta_w[i], dw[i]);
@@ -151,6 +151,6 @@ TEST_F(NNnetTest, DefaultTest)
         EXPECT_EQ(delta_b[i], db[i]);
     }
     cout << endl;
-    
+
 
 }
