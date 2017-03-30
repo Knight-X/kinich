@@ -35,15 +35,17 @@ bool NNetwork::train(const std::vector<std::vector<nn_vec_t>>& in,
             runTrainBatch(in[index], target[index], batch_size);
         }
     }
+    return true;
 }
 
 
 void NNetwork::runTrainBatch(const std::vector<nn_vec_t>& in, const std::vector<nn_vec_t>& t, nn_size batch_size)
 {
     bprop(fprop(in), t);
-    mse = mse / batch_size;
-
+    calculate_result(batch_size, t[0].size());
+    std::cout << "mse: " << mse << std::endl;
     update_weight(batch_size);
+    mse = 0.0;
 }
 
 const std::vector<nn_vec_t>& NNetwork::fprop(const std::vector<nn_vec_t>& in)
@@ -80,6 +82,8 @@ const std::vector<nn_vec_t>& NNetwork::bprop(const std::vector<nn_vec_t>& in, co
     for (nn::nn_size i = 0; i < in.size(); i++) {
         nn_vec_t delta(in[i].size());
         nn_vec_t derivitive_e = nn::gradient(_lossfunc, &in[i], &t[i]);
+        nn_vec_t pred_v = nn::predict(_lossfunc, &in[i], &t[i]);
+        collect_error(pred_v);
         nn::activation::activation_interface& _h = outNode->getLayer()->activation_func();
         for (nn_size index = 0; index < in[i].size(); index++) {
             nn_vec_t derivative_y = _h.differential_result(in[i], index);
@@ -121,5 +125,10 @@ void NNetwork::collect_error(nn_vec_t r)
     for (nn_size i = 0; i < r.size(); i++) {
         mse += r[i];
     }
+}
+
+void NNetwork::calculate_result(nn_size t, nn_size dim)
+{
+    mse = mse / t * dim;
 }
 }

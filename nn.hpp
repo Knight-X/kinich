@@ -8,6 +8,7 @@
 #include "optimizer.hpp"
 #include "input.hpp"
 #include "gradient.hpp"
+#include "predict.hpp"
 
 namespace nn
 {
@@ -27,6 +28,7 @@ public:
 
     void init_weight();
     void collect_error(nn_vec_t r);
+    void calculate_result(nn_size t, nn_size dim);
 
     void add(nn::baselayer* layer);
     nn::Graph* getGraph()
