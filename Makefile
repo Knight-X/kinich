@@ -1,5 +1,7 @@
 
-USER_DIR = .
+USER_DIR = ./src
+
+TEST_DIR = ./tests
 
 CPPFLAGS += -isystem $(GTEST_DIR)/include
 
@@ -49,13 +51,12 @@ graph.o : $(USER_DIR)/graph.cc $(USER_DIR)/layer.hpp $(USER_DIR)/graph.hpp
 layer.o : $(USER_DIR)/layer.cc $(USER_DIR)/layer.hpp $(USER_DIR)/input.hpp $(USER_DIR)/fully_connect.hpp $(GTEST_HEADERS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/layer.cc
 
-test_layer.o : $(USER_DIR)/test_layer.cc \
-                     $(USER_DIR)/layer.hpp $(USER_DIR)/input.hpp $(USER_DIR)/fully_connect.hpp $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/test_layer.cc
+test_layer.o : $(TEST_DIR)/test_layer.cc \
+                     $(USER_DIR)/layer.hpp $(USER_DIR)/*.hpp $(USER_DIR)/fully_connect.hpp $(GTEST_HEADERS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/test_layer.cc
 
-test_nn.o : $(USER_DIR)/test_nn.cc $(USER_DIR)/nn.hpp $(USER_DIR)/layer.hpp $(USER_DIR)/graph.hpp  $(GTEST_HEADERS) $(USER_DIR)/gradient.hpp $(USER_DIR)/gradient.cc $(USER_DIR)/predict.hpp
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/test_nn.cc $(USER_DIR)/gradient.cc $(USER_DIR)/predict.cc
-
+test_nn.o : $(TEST_DIR)/test_nn.cc $(USER_DIR)/nn.hpp $(USER_DIR)/layer.hpp $(USER_DIR)/graph.hpp  $(GTEST_HEADERS) $(USER_DIR)/gradient.hpp $(USER_DIR)/gradient.cc $(USER_DIR)/predict.hpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(TEST_DIR)/test_nn.cc $(USER_DIR)/gradient.cc $(USER_DIR)/predict.cc 
 test : test_layer.o layer.o gtest_main.a gradient.o
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
 
