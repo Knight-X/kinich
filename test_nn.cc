@@ -75,9 +75,10 @@ TEST_F(NNnetTest, DefaultTest)
     nn::nn_size in_dim = l2.input_dim();
     nn::activation::activation_interface& h_ = l2.activation_func();
     for (nn::nn_size i = 0; i < out_dim; i++) {
+        tmp_res[i] = float(0.0);
         for (nn::nn_size c = 0; c < in_dim; c++) {
             tmp_res[i] += weight[c * out_dim + i] * in[0][0][c];
-            cout << "target in " << in[0][0][c] << endl;
+//            cout << "target in " << in[0][0][c] << endl;
         }
 
         tmp_res[i] += bias[i];
@@ -151,6 +152,23 @@ TEST_F(NNnetTest, DefaultTest)
         EXPECT_EQ(delta_b[i], db[i]);
     }
     cout << endl;
+
+    nn::nn_vec_t l2weight(weight.size(), 0);
+    double echelon = 0.01;
+    for (nn::nn_size i = 0; i < l2weight.size(); i++)
+        std::cout << weight[i] << " ";
+    std::cout << std::endl;
+    //update weight
+    for (nn::nn_size i = 0; i < l2weight.size(); i++) {
+        l2weight[i] = weight[i] - echelon * delta_w[i];
+        std::cout << l2weight[i] << " ";
+    }
+
+    nnet.update_weight(1);
+    for (nn::nn_size i = 0; i < l2weight.size(); i++) {
+        EXPECT_EQ(l2weight[i], weight[i]);
+    }
+    std::cout << std::endl;
 
 
 }
