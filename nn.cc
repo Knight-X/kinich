@@ -46,6 +46,7 @@ void NNetwork::runTrainBatch(const std::vector<nn_vec_t>& in, const std::vector<
     std::cout << "mse: " << mse << std::endl;
     update_weight(batch_size);
     mse = 0.0;
+    numsIncorrect = 0;
 }
 
 const std::vector<nn_vec_t>& NNetwork::fprop(const std::vector<nn_vec_t>& in)
@@ -82,8 +83,9 @@ const std::vector<nn_vec_t>& NNetwork::bprop(const std::vector<nn_vec_t>& in, co
     for (nn::nn_size i = 0; i < in.size(); i++) {
         nn_vec_t delta(in[i].size());
         nn_vec_t derivitive_e = nn::gradient(_lossfunc, &in[i], &t[i]);
-        nn_vec_t pred_v = nn::predict(_lossfunc, &in[i], &t[i]);
-        collect_error(pred_v);
+        nn_vec_t pred_v = nn::predict_err(_lossfunc, &in[i], &t[i]);
+        bool correct = nn::predict(_lossfunc, &in[i], &t[i]);
+        collect_error(pred_v, correct);
         nn::activation::activation_interface& _h = outNode->getLayer()->activation_func();
         for (nn_size index = 0; index < in[i].size(); index++) {
             nn_vec_t derivative_y = _h.differential_result(in[i], index);
@@ -118,10 +120,14 @@ void NNetwork::update_weight(nn_size batch_size)
         e->input()->getLayer()->update(_optimizer, batch_size);
         e->output()->getLayer()->update(_optimizer, batch_size);
         e = nngraph->nextEdge(node);
+        std::cout << "update" << std::endl;
     }
 }
-void NNetwork::collect_error(nn_vec_t r)
+void NNetwork::collect_error(nn_vec_t r, bool correct)
 {
+    if (!correct)
+        numsIncorrect++;
+
     for (nn_size i = 0; i < r.size(); i++) {
         mse += r[i];
     }
@@ -130,5 +136,9 @@ void NNetwork::collect_error(nn_vec_t r)
 void NNetwork::calculate_result(nn_size t, nn_size dim)
 {
     mse = mse / t * dim;
+    double perc = 100 - (numsIncorrect / t * 100);
+    //std::cout << t * dim << std::endl;
+    std::cout << "correct percentage: " << numsIncorrect << std::endl;
 }
+
 }

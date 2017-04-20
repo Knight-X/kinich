@@ -23,12 +23,14 @@ private:
     std::vector<nn_vec_t> backward_res;
     nn_vec_t output_delta;
     double mse = 0;
+    int numsIncorrect = 0;
 public:
     //OptimizerMethod optimizer();
 
     void init_weight();
-    void collect_error(nn_vec_t r);
+    void collect_error(nn_vec_t r, bool correct);
     void calculate_result(nn_size t, nn_size dim);
+    int clampOutput(double x);
 
     void add(nn::baselayer* layer);
     nn::Graph* getGraph()
