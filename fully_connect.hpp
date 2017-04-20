@@ -64,8 +64,8 @@ public:
         for (nn_size j = 0; j < Base::in_dim; j++) {
             for (nn_size c = 0; c < Base::out_dim; c++) {
                 deltaW[j * Base::out_dim + c] += curr_delta[c] * prev_out[j];
-                std::cout << "curr " << curr_delta[c] << " ";
-                std::cout << "prev_out " << prev_out[c] << " ";
+                //std::cout << "curr " << curr_delta[c] << " ";
+                //std::cout << "prev_out " << prev_out[c] << " ";
             }
         }
 
