@@ -1,6 +1,6 @@
 # Kinich
 
-This is a neural Network framework written by C++11.
+This is a experimental neural Network framework written by C++11.
 
 The key idea of Kinich is to accelerate the neural 
 network computing by using concurrency strategy. It 
@@ -14,4 +14,5 @@ feature in the future:
 
 3. Hardward Specialization
 
-
+## License and Citation
+Kinich is released under the BSD 2-Clause license.
